@@ -633,3 +633,37 @@ data class ApplicationCommandUpdate(val application: DiscordApplicationCommand, 
 @KordPreview
 data class ApplicationCommandDelete(val application: DiscordApplicationCommand, override val sequence: Int?) :
     DispatchEvent()
+
+data class ThreadCreate(val channel: DiscordChannel, override val sequence: Int?) : DispatchEvent()
+
+data class ThreadUpdate(val channel: DiscordChannel, override val sequence: Int?) : DispatchEvent()
+
+data class ThreadDelete(val channel: DiscordChannel, override val sequence: Int?) : DispatchEvent()
+
+data class ThreadMemberUpdate(val member: DiscordThreadMember, override val sequence: Int?) : DispatchEvent()
+
+data class ThreadListSync(val sync: ThreadListSync, override val sequence: Int?) : DispatchEvent()
+
+data class ThreadMembersUpdate(val members: ThreadMembersUpdate, override val sequence: Int?) : DispatchEvent()
+
+@Serializable
+data class ThreadListSync(
+    @SerialName("guild_id")
+    val guildId: Snowflake,
+    @SerialName("channel_ids")
+    val channelIds: List<Snowflake>,
+    val theads: List<DiscordChannel>,
+    val members: List<DiscordThreadMember>
+)
+
+@Serializable
+data class ThreadMembersUpdate(
+    val id: Snowflake,
+    @SerialName("guild_id")
+    val guildId: Snowflake,
+    @SerialName("member_count")
+    val memberCount: Int,
+    @SerialName("added_members")
+    val addedMembers: Optional<List<DiscordThreadMember>> = Optional.Missing(),
+    val removedMemberIds: Optional<List<Snowflake>> = Optional.Missing()
+)
