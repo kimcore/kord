@@ -298,7 +298,11 @@ enum class MessageFlag(val code: Int) {
     /* This message came from the urgent message system. */
     Urgent(16),
 
-    Ephemeral(64);
+    HasThread(32),
+
+    Ephemeral(64),
+
+    Loading(128);
 }
 
 @Serializable(with = MessageFlags.Serializer::class)
