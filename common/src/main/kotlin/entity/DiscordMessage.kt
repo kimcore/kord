@@ -109,7 +109,8 @@ data class DiscordMessage(
      * This is a list even though the docs say it's a component
      */
     val components: Optional<List<DiscordComponent>> = Optional.Missing(),
-    val interaction: Optional<DiscordMessageInteraction> = Optional.Missing()
+    val interaction: Optional<DiscordMessageInteraction> = Optional.Missing(),
+    val thread: Optional<DiscordChannel> = Optional.Missing()
 )
 
 /**
