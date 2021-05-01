@@ -381,6 +381,38 @@ sealed class Event {
                     sequence
                 )
 
+                "THREAD_CREATE" -> ThreadCreate(
+                    decoder.decodeSerializableElement(descriptor, index, DiscordChannel.serializer()),
+                    sequence
+                )
+
+
+                "THREAD_DELETE" -> ThreadDelete(
+                    decoder.decodeSerializableElement(descriptor, index, DiscordChannel.serializer()),
+                    sequence
+                )
+
+
+                "THREAD_UPDATE" -> ThreadUpdate(
+                    decoder.decodeSerializableElement(descriptor, index, DiscordChannel.serializer()),
+                    sequence
+                )
+
+                "THREAD_LIST_SYNC" -> ThreadListSync(
+                    decoder.decodeSerializableElement(descriptor, index, DiscordThreadListSync.serializer()),
+                    sequence
+                )
+
+                "THREAD_MEMBER_UPDATE" -> ThreadMemberUpdate(
+                    decoder.decodeSerializableElement(descriptor, index, DiscordThreadMember.serializer()),
+                    sequence
+                )
+
+
+                "THREAD_MEMBERS_UPDATE" -> ThreadMembersUpdate(
+                    decoder.decodeSerializableElement(descriptor, index, DiscordThreadMembersUpdate.serializer()),
+                    sequence
+                )
 
                 else -> {
                     jsonLogger.warn { "unknown gateway event name $name" }
@@ -642,12 +674,12 @@ data class ThreadDelete(val channel: DiscordChannel, override val sequence: Int?
 
 data class ThreadMemberUpdate(val member: DiscordThreadMember, override val sequence: Int?) : DispatchEvent()
 
-data class ThreadListSync(val sync: ThreadListSync, override val sequence: Int?) : DispatchEvent()
+data class ThreadListSync(val sync: DiscordThreadListSync, override val sequence: Int?) : DispatchEvent()
 
-data class ThreadMembersUpdate(val members: ThreadMembersUpdate, override val sequence: Int?) : DispatchEvent()
+data class ThreadMembersUpdate(val members: DiscordThreadMembersUpdate, override val sequence: Int?) : DispatchEvent()
 
 @Serializable
-data class ThreadListSync(
+data class DiscordThreadListSync(
     @SerialName("guild_id")
     val guildId: Snowflake,
     @SerialName("channel_ids")
@@ -657,7 +689,7 @@ data class ThreadListSync(
 )
 
 @Serializable
-data class ThreadMembersUpdate(
+data class DiscordThreadMembersUpdate(
     val id: Snowflake,
     @SerialName("guild_id")
     val guildId: Snowflake,
