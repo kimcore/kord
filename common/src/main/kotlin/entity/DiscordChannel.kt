@@ -71,7 +71,7 @@ data class DiscordChannel(
     @SerialName("member_count")
     val memberCount: OptionalInt = OptionalInt.Missing,
     val threadMetadata: Optional<DiscordThreadMetadata> = Optional.Missing(),
-    val member:
+    val member: Optional<DiscordThreadMember> = Optional.Missing()
 )
 
 @Serializable(with = ChannelType.Serializer::class)
