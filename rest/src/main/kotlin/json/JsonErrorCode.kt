@@ -502,6 +502,12 @@ enum class JsonErrorCode(val code: Int) {
      */
     InvalidStickerSent(50081),
 
+    OperationOnAchievedThread(50083),
+
+    InvalidThreadSettings(50084),
+
+    InvalidThreadBefore(50085),
+
     /**
      * 2 Factor Authentication is required.
      *
