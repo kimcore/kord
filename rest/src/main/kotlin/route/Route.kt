@@ -657,7 +657,8 @@ sealed class Route<T>(
             DiscordChannel.serializer()
         );
 
-    object StartPublicThreadWithoutMessagePost :
+
+    object StartPrivateThreadPost :
         Route<DiscordChannel>(HttpMethod.Post, "/channels/${ChannelId}/threads", DiscordChannel.serializer());
 
     object JoinThreadPut :
@@ -668,6 +669,9 @@ sealed class Route<T>(
 
     object LeaveThreadDelete :
         Route<Unit>(HttpMethod.Delete, "/channels/${ChannelId}/thread-members/@me", NoStrategy)
+
+    object RemoveUserFromThreadDelete :
+        Route<Unit>(HttpMethod.Delete, "/channels/${ChannelId}/thread-members/${UserId}", NoStrategy)
 
     object ListThreadMembersGet :
         Route<List<DiscordThreadMember>>(
