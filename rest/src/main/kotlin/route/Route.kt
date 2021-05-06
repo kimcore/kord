@@ -14,33 +14,11 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import dev.kord.common.entity.DiscordEmoji as EmojiEntity
 
 internal const val REST_VERSION_PROPERTY_NAME = "dev.kord.rest.version"
 internal val restVersion get() = System.getenv(REST_VERSION_PROPERTY_NAME) ?: "v8"
-
-sealed interface ResponseMapper<T> {
-    fun deserialize(json: Json, body: String): T
-}
-
-internal class ValueJsonMapper<T>(val strategy: DeserializationStrategy<T>) : ResponseMapper<T> {
-    override fun deserialize(json: Json, body: String): T = json.decodeFromString(strategy, body)
-    override fun toString(): String = "ValueJsonMapper(strategy=$strategy)"
-}
-
-internal class NullAwareMapper<T>(val strategy: DeserializationStrategy<T>) : ResponseMapper<T?> {
-    override fun deserialize(json: Json, body: String): T? {
-        if (body.isBlank()) return null
-        return json.decodeFromString(strategy, body)
-    }
-
-    override fun toString(): String = "NullAwareMapper(strategy=$strategy)"
-}
-
-internal val <T> DeserializationStrategy<T>.optional: ResponseMapper<T?>
-    get() = NullAwareMapper(this)
 
 sealed class Route<T>(
     val method: HttpMethod,
@@ -672,6 +650,69 @@ sealed class Route<T>(
     object OthersVoiceStatePatch:
         Route<Unit>(HttpMethod.Patch, "/guilds/${GuildId}/voice-states/${UserId}", NoStrategy)
 
+    object StartPublicThreadPost :
+        Route<DiscordChannel>(
+            HttpMethod.Post,
+            "/channels/${ChannelId}/messages/${MessageId}/threads",
+            DiscordChannel.serializer()
+        );
+
+    object StartPublicThreadWithoutMessagePost :
+        Route<DiscordChannel>(HttpMethod.Post, "/channels/${ChannelId}/threads", DiscordChannel.serializer());
+
+    object JoinThreadPut :
+        Route<Unit>(HttpMethod.Put, "/channels/${ChannelId}/thread-members/@me", NoStrategy)
+
+    object AddThreadMemberPut :
+        Route<Unit>(HttpMethod.Put, "/channels/$ChannelId/thread-members/${UserId}", NoStrategy)
+
+    object LeaveThreadDelete :
+        Route<Unit>(HttpMethod.Delete, "/channels/${ChannelId}/thread-members/@me", NoStrategy)
+
+    object ListThreadMembersGet :
+        Route<List<DiscordThreadMember>>(
+            HttpMethod.Get,
+            "/channels/${ChannelId}/thread-members",
+            ListSerializer(DiscordThreadMember.serializer())
+        )
+
+    object ListActiveThreadsGet :
+        Route<ListThreadsResponse>(
+            HttpMethod.Get,
+            "/channels/${ChannelId}/threads/active",
+            ListThreadsResponse.serializer()
+        )
+
+
+    object ListPrivateThreadsGet :
+        Route<ListThreadsResponse>(
+            HttpMethod.Get,
+            "/channels/${ChannelId}/threads/private",
+            ListThreadsResponse.serializer()
+        )
+
+
+    object ListPrivateArchivedThreadsGet :
+        Route<ListThreadsResponse>(
+            HttpMethod.Get,
+            "/channels/${ChannelId}/threads/archived/private",
+            ListThreadsResponse.serializer()
+        )
+
+    object ListPublicArchivedThreadsGet :
+        Route<ListThreadsResponse>(
+            HttpMethod.Get,
+            "/channels/${ChannelId}/threads/archived/public",
+            ListThreadsResponse.serializer()
+        )
+
+    object ListJoinedPrivateArchivedThreadsGet :
+        Route<ListThreadsResponse>(
+            HttpMethod.Get,
+            "/channels/$ChannelId/users/@me/threads/archived/private",
+            ListThreadsResponse.serializer()
+        )
+
     object StageInstanceGet :
         Route<DiscordStageInstance>(HttpMethod.Get, "/stage-instances/$ChannelId", DiscordStageInstance.serializer())
 
@@ -683,6 +724,7 @@ sealed class Route<T>(
 
     object StageInstanceDelete :
         Route<Unit>(HttpMethod.Delete, "/stage-instances/$ChannelId", NoStrategy)
+
 
     companion object {
         val baseUrl = "https://discord.com/api/$restVersion"
