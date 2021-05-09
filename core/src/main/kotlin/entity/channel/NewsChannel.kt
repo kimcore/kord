@@ -1,5 +1,6 @@
 package dev.kord.core.entity.channel
 
+import behavior.channel.InvitableChannel
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.ChannelBehavior
 import dev.kord.core.behavior.channel.GuildChannelBehavior
@@ -16,7 +17,7 @@ data class NewsChannel(
     override val data: ChannelData,
     override val kord: Kord,
     override val supplier: EntitySupplier = kord.defaultSupplier
-) : CategorizableChannel, GuildMessageChannel, NewsChannelBehavior {
+) : CategorizableChannel, GuildMessageChannel, NewsChannelBehavior, InvitableChannel {
 
     override suspend fun asChannel(): NewsChannel = this
 

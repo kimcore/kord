@@ -6,6 +6,7 @@ import dev.kord.common.exception.RequestException
 import dev.kord.core.Kord
 import dev.kord.core.cache.data.WebhookData
 import dev.kord.core.entity.Webhook
+import dev.kord.core.entity.channel.GuildChannel
 import dev.kord.core.entity.channel.GuildMessageChannel
 import dev.kord.core.exception.EntityNotFoundException
 import dev.kord.core.supplier.EntitySupplier
@@ -62,7 +63,7 @@ interface GuildMessageChannelBehavior : GuildChannelBehavior, MessageChannelBeha
      * @throws [RequestException] if something went wrong during the request.
      */
     override suspend fun asChannelOrNull(): GuildMessageChannel? =
-        super<GuildChannelBehavior>.asChannelOrNull() as? GuildMessageChannel
+        super<GuildChannelBehavior>.asChannelOrNull() as GuildMessageChannel
 
     /**
      * Requests to bulk delete the [messages].

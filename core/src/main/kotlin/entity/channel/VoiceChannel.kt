@@ -1,5 +1,6 @@
 package dev.kord.core.entity.channel
 
+import behavior.channel.InvitableChannel
 import dev.kord.common.entity.optional.getOrThrow
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.ChannelBehavior
@@ -17,7 +18,7 @@ class VoiceChannel(
     override val data: ChannelData,
     override val kord: Kord,
     override val supplier: EntitySupplier = kord.defaultSupplier
-) : CategorizableChannel, VoiceChannelBehavior {
+) : CategorizableChannel, VoiceChannelBehavior, InvitableChannel {
 
 
     /**

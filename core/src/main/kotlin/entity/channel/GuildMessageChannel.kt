@@ -6,7 +6,7 @@ import dev.kord.core.supplier.EntitySupplyStrategy
 /**
  * An instance of a Discord message channel associated to a [guild].
  */
-interface GuildMessageChannel : CategorizableChannel, MessageChannel, GuildMessageChannelBehavior {
+interface GuildMessageChannel : GuildChannel, MessageChannel, GuildMessageChannelBehavior {
 
     /**
      * The channel topic, if present.

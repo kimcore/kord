@@ -1,5 +1,7 @@
 package dev.kord.core.rest
 
+import behavior.channel.InvitableChannel
+import behavior.channel.createInvite
 import dev.kord.common.Color
 import dev.kord.common.annotation.KordExperimental
 import dev.kord.common.annotation.KordPreview
@@ -11,7 +13,6 @@ import dev.kord.core.entity.Guild
 import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.channel.GuildMessageChannel
 import dev.kord.core.entity.channel.TextChannel
-import dev.kord.core.entity.channel.createInvite
 import dev.kord.rest.Image
 import dev.kord.rest.request.RequestHandler
 import dev.kord.rest.request.RestRequestException
@@ -97,7 +98,7 @@ class RestServiceTest {
     @Test
     @Order(2)
     fun `create invite`() = runBlocking {
-        val channel = guild.channels.filterIsInstance<GuildMessageChannel>().first()
+        val channel = guild.channels.filterIsInstance<InvitableChannel>().first()
         val invite = channel.createInvite()
 
         guild.getInvite(invite.code)
